@@ -1,0 +1,15 @@
+{
+  "name": "lab3y4-redes",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/JaniMariQuesiRami/lab3y4-redes.git",
+  "author": "Javier Chavez <77762186+jannisce@users.noreply.github.com>",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@xmpp/client": "^0.13.1"
+  }
+}
