@@ -45,3 +45,22 @@ export async function ConectarXMPP(usuario, contrasena) {
 
   return xmpp
 }
+
+export async function enviarMensaje(clienteXMPP, destinatario, datosMensaje) {
+  const mensajeFormateado = {
+    type: datosMensaje.type || "message",
+    from: datosMensaje.from,
+    to: datosMensaje.to,
+    hops: datosMensaje.hops || 1,
+    payload: datosMensaje.payload
+  }
+
+  const mensajeStanza = xmppXml(
+    'message',
+    { type: 'chat', to: destinatario },
+    xmppXml('body', {}, JSON.stringify(mensajeFormateado))
+  )
+
+  clienteXMPP.send(mensajeStanza)
+  registrar(`Mensaje enviado a ${destinatario}: ${JSON.stringify(mensajeFormateado)}`, 'info')
+}
