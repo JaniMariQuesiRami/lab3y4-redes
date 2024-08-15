@@ -1,0 +1,37 @@
+{
+  "type": "topo",
+  "config": {
+    "A": [
+      {"neighbor": "D", "weight": 1},
+      {"neighbor": "E", "weight": 2}
+    ],
+    "B": [
+      {"neighbor": "C", "weight": 1},
+      {"neighbor": "D", "weight": 2},
+      {"neighbor": "E", "weight": 3},
+      {"neighbor": "F", "weight": 1}
+    ],
+    "C": [
+      {"neighbor": "B", "weight": 1},
+      {"neighbor": "D", "weight": 2},
+      {"neighbor": "E", "weight": 3}
+    ],
+    "D": [
+      {"neighbor": "A", "weight": 1},
+      {"neighbor": "B", "weight": 2},
+      {"neighbor": "C", "weight": 3},
+      {"neighbor": "E", "weight": 4}
+    ],
+    "E": [
+      {"neighbor": "A", "weight": 1},
+      {"neighbor": "B", "weight": 2},
+      {"neighbor": "C", "weight": 3},
+      {"neighbor": "D", "weight": 4},
+      {"neighbor": "F", "weight": 1}
+    ],
+    "F": [
+      {"neighbor": "B", "weight": 1},
+      {"neighbor": "E", "weight": 2}
+    ]
+  }
+}
