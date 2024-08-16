@@ -38,3 +38,20 @@ const interfazEntrada = readline.createInterface({
   output: process.stdout,
   terminal: false
 })
+
+const obtenerEntrada = (textoPrompt) => {
+  return new Promise(resolve => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    })
+    rl.question(textoPrompt, (respuesta) => {
+      rl.close()
+      resolve(respuesta)
+    })
+  })
+}
+
+const preguntarUsuario = (textoPrompt) => {
+  return new Promise(resolve => interfazEntrada.question(textoPrompt, resolve))
+}
