@@ -77,3 +77,49 @@ const encontrarArchivoNombres = (directorio) => {
   }
   return null
 }
+
+const cargarConfiguracionNombres = (ubicacionArchivo) => {
+  const datosCrudos = fs.readFileSync(ubicacionArchivo, 'utf8')
+  const configuracionParseada = JSON.parse(datosCrudos).config
+  return configuracionParseada
+}
+
+const cargarConfiguracionInundacion = (ubicacionArchivo) => {
+  const datosCrudos = fs.readFileSync(ubicacionArchivo, 'utf8')
+  const configuracionParseada = JSON.parse(datosCrudos).config
+
+  const instanciasNodos = {}
+
+  for (const idNodo in configuracionParseada) {
+    instanciasNodos[idNodo] = new NodoFlooding(idNodo)
+  }
+
+  for (const idNodo in configuracionParseada) {
+    const nodo = instanciasNodos[idNodo]
+    configuracionParseada[idNodo].forEach((vecino) => {
+      nodo.agregarAdyacente(instanciasNodos[vecino.neighbor], vecino.weight)
+    })
+  }
+
+  return instanciasNodos
+}
+
+const cargarConfiguracionEstadoEnlace = (ubicacionArchivo) => {
+  const datosCrudos = fs.readFileSync(ubicacionArchivo, 'utf8')
+  const configuracionParseada = JSON.parse(datosCrudos).config
+
+  const instanciasNodos = {}
+
+  for (const idNodo in configuracionParseada) {
+    instanciasNodos[idNodo] = new LinkStateNodo(idNodo)
+  }
+
+  for (const idNodo in configuracionParseada) {
+    const nodo = instanciasNodos[idNodo]
+    configuracionParseada[idNodo].forEach((vecino) => {
+      nodo.agregarVecino(instanciasNodos[vecino.neighbor], vecino.weight)
+    })
+  }
+
+  return instanciasNodos
+}
