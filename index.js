@@ -55,3 +55,25 @@ const obtenerEntrada = (textoPrompt) => {
 const preguntarUsuario = (textoPrompt) => {
   return new Promise(resolve => interfazEntrada.question(textoPrompt, resolve))
 }
+
+const elegirAlgoritmoEnrutamiento = async () => {
+  const algoritmoElegido = await preguntarUsuario('Seleccione el método de enrutamiento:\n1. Inundación\n2. Estado de Enlace\n')
+  if (algoritmoElegido === '1') {
+    return 'inundacion'
+  } else if (algoritmoElegido === '2') {
+    return 'estado-de-enlace'
+  } else {
+    registrar('Entrada inválida. Por favor, inténtelo de nuevo.', 'warn')
+    return elegirAlgoritmoEnrutamiento()
+  }
+}
+
+const encontrarArchivoNombres = (directorio) => {
+  const todosArchivos = fs.readdirSync(directorio)
+  for (const archivo of todosArchivos) {
+    if (archivo.startsWith('names-') && archivo.endsWith('.json')) {
+      return path.join(directorio, archivo)
+    }
+  }
+  return null
+}
