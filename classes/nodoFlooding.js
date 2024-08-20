@@ -4,13 +4,13 @@
 
 class Nodo {
   constructor(name) {
-      this.name = name;
-      this.xmpp_user = '';
-      this.neighbors = [];
+    this.name = name
+    this.xmpp_user = ''
+    this.neighbors = []
   }
 
   toString() {
-      return `Nodo  (${this.name})`;
+    return `Nodo  (${this.name})`
   }
 }
 
@@ -28,6 +28,25 @@ class NodoFlooding extends Nodo {
     this.adjacentNodes.forEach(({ Node: neighborNode, Peso: pesoEnlace }) => {
       if (!ruta.includes(neighborNode)) {
         neighborNode.procesarInundacion(this, [...ruta], pesoTotal + pesoEnlace)
+      }
+    })
+  }
+
+  procesarInundacion(nodoOrigen, ruta, pesoTotal) {
+    if (ruta.includes(this)) {
+      return
+    }
+
+    ruta.push(this)
+
+    if (!this.routeMap.has(nodoOrigen.name)) {
+      this.routeMap.set(nodoOrigen.name, [])
+    }
+    this.routeMap.get(nodoOrigen.name).push({ ruta: [...ruta], pesoTotal })
+
+    this.adjacentNodes.forEach(({ Node: neighborNode, Peso: pesoEnlace }) => {
+      if (!ruta.includes(neighborNode)) {
+        neighborNode.procesarInundacion(nodoOrigen, [...ruta], pesoTotal + pesoEnlace)
       }
     })
   }
