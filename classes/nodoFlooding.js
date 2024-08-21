@@ -51,4 +51,22 @@ class NodoFlooding extends Nodo {
     })
   }
 
+  agregarAdyacente(nodoVecino, pesoEnlace) {
+    this.adjacentNodes.push({ Node: nodoVecino, Peso: pesoEnlace })
+  }
+
+  rutaOptima(nodoOrigen) {
+    if (!this.routeMap.has(nodoOrigen)) {
+      return null
+    }
+
+    return this.routeMap.get(nodoOrigen).reduce((optima, actual) => {
+      if (optima === null) {
+        return actual
+      }
+
+      return actual.pesoTotal < optima.pesoTotal ? actual : optima
+    }, null)
+  }
+
 }
