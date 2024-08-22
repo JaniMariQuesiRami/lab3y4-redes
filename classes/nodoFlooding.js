@@ -83,3 +83,5 @@ class NodoFlooding extends Nodo {
   }
 
 }
+
+export { NodoFlooding };
