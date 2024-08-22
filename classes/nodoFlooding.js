@@ -69,4 +69,17 @@ class NodoFlooding extends Nodo {
     }, null)
   }
 
+  toString() {
+    return `NodoFlooding(${this.name})`
+  }
+
+  imprimirRutas() {
+    this.routeMap.forEach((rutas, nodoOrigen) => {
+      console.log(`Rutas desde ${nodoOrigen} hacia ${this.name}:`)
+      rutas.forEach(({ ruta, pesoTotal }) => {
+        console.log(`  Ruta: ${ruta.map(nodo => nodo.name).join(' -> ')}, Peso Total: ${pesoTotal}`)
+      })
+    })
+  }
+
 }
