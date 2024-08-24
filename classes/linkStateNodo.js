@@ -66,4 +66,20 @@ class LinkStateNodo extends Nodo {
     this.paths = distances // Store the final distances and paths
   }
 
+  caminoMasCorto(target) {
+    if (!this.paths.has(target.name)) {
+      return null
+    }
+
+    const path = []
+    let current = target
+
+    while (current !== null) {
+      path.unshift(current)
+      current = this.paths.get(current.name).previous
+    }
+
+    return { path, distance: this.paths.get(target.name).distance }
+  }
+
 }
