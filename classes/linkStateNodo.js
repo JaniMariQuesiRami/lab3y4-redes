@@ -82,4 +82,21 @@ class LinkStateNodo extends Nodo {
     return { path, distance: this.paths.get(target.name).distance }
   }
 
+  imprimirRutas() {
+    // console.log(`Routing table for ${this.name}:`);
+    this.paths.forEach((value, destination) => {
+      const path = []
+      let current = destination
+
+      while (current !== null) {
+        path.unshift(current)
+        current = this.paths.get(current).previous ? this.paths.get(current).previous.name : null
+      }
+
+      console.log(`Destination: ${destination}, Path: ${path.join(' -> ')}, Distance: ${value.distance}`)
+    })
+  }
+
 }
+
+export { LinkStateNodo }
