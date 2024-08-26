@@ -151,3 +151,39 @@ const obtenerCredencialesNodo = (instanciasNodos, mapaNombresXmpp) => {
   }
 }
 
+const iniciar = async () => {
+  const directorioConfig = 'src/config'
+  const archivoTopologia = encontrarArchivoTopologia(directorioConfig)
+  const archivoNombres = encontrarArchivoNombres(directorioConfig)
+
+  if (!archivoTopologia) {
+    registrar('No se encontró el archivo de topología.', 'error')
+    process.exit(1)
+  }
+
+  if (!archivoNombres) {
+    registrar('No se encontró el archivo de nombres.', 'error')
+    process.exit(1)
+  }
+
+  const algoritmoElegido = await elegirAlgoritmoEnrutamiento()
+  let instanciasNodos
+
+  if (algoritmoElegido === 'inundacion') {
+    instanciasNodos = cargarConfiguracionInundacion('src/config/flood-weights.json')
+  } else if (algoritmoElegido === 'estado-de-enlace') {
+    instanciasNodos = cargarConfiguracionEstadoEnlace('src/config/linkState-weights.json')
+  }
+
+
+  // Cerrar la sesión XMPP después de que el bucle termine
+  await conexionXmpp.stop().then(() => {
+    registrar(`Cerrando sesión de ${usuarioXmpp}...`, 'info')
+    process.exit()
+  }).catch(err => {
+    registrar('Error al finalizar la sesión: ' + err, 'error')
+    process.exit(1)
+  })
+}
+
+iniciar()
