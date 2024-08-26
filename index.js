@@ -150,3 +150,4 @@ const obtenerCredencialesNodo = (instanciasNodos, mapaNombresXmpp) => {
     process.exit(1)
   }
 }
+
