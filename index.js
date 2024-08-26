@@ -175,15 +175,83 @@ const iniciar = async () => {
     instanciasNodos = cargarConfiguracionEstadoEnlace('src/config/linkState-weights.json')
   }
 
+  if (instanciasNodos) {
+    const { node: nodoLocal, usuarioXmpp, contrasena } = obtenerCredencialesNodo(instanciasNodos, mapaNombresXmpp)
 
-  // Cerrar la sesión XMPP después de que el bucle termine
-  await conexionXmpp.stop().then(() => {
-    registrar(`Cerrando sesión de ${usuarioXmpp}...`, 'info')
-    process.exit()
-  }).catch(err => {
-    registrar('Error al finalizar la sesión: ' + err, 'error')
-    process.exit(1)
-  })
+    // Conectar al servidor XMPP
+    const conexionXmpp = await ConectarXMPP(usuarioXmpp, contrasena)
+
+    registrar(`Conectado exitosamente como ${usuarioXmpp}`, 'info')
+
+    let seguirEjecutando = true
+
+    while (seguirEjecutando) {
+      const opcionUsuario = await obtenerEntrada('Enviar (1) o Recibir (2) o Salir (3): ')
+
+      if (opcionUsuario === '1') {
+        const nombreNodoReceptor = await obtenerEntrada('Ingrese el nodo receptor: ')
+        const nodoDestino = instanciasNodos[nombreNodoReceptor]
+
+        if (!nodoDestino) {
+          registrar('Nodo no encontrado.', 'warn')
+          continue
+        }
+
+        const contenidoMensaje = await obtenerEntrada('Mensaje: ')
+
+        const mensajeSaliente = {
+          from: usuarioXmpp,
+          to: mapaNombresXmpp[nodoDestino.name],
+          payload: contenidoMensaje
+        }
+
+        if (algoritmoElegido === 'inundacion') {
+          nodoLocal.iniciarInundacion()
+          const rutaOptima = nodoDestino.rutaOptima(nodoLocal.name)
+          if (rutaOptima) {
+            registrar(`Mejor ruta desde ${nodoLocal.name} hacia ${nodoDestino.name}: ${rutaOptima.ruta.map(node => node.name).join(' -> ')}`, 'info')
+            registrar(`Peso total: ${rutaOptima.pesoTotal}`, 'info')
+            mensajeSaliente.hops = 1
+            mensajeSaliente.type = "message"
+            await enviarMensaje(conexionXmpp, mapaNombresXmpp[rutaOptima.ruta[1].name], mensajeSaliente)
+          } else {
+            registrar(`No se encontró una ruta desde ${nodoLocal.name} hacia ${nodoDestino.name}.`, 'warn')
+          }
+        } else if (algoritmoElegido === 'estado-de-enlace') {
+          nodoLocal.linkState(instanciasNodos)
+          const rutaMasCorta = nodoLocal.caminoMasCorto(nodoDestino)
+          if (rutaMasCorta) {
+            registrar(`Ruta más corta desde ${nodoLocal.name} hacia ${nodoDestino.name}: ${rutaMasCorta.path.map(node => node.name).join(' -> ')}`, 'info')
+            registrar(`Distancia total: ${rutaMasCorta.distance}`, 'info')
+            mensajeSaliente.hops = 1
+            mensajeSaliente.type = "message"
+            await enviarMensaje(conexionXmpp, mapaNombresXmpp[rutaMasCorta.path[1].name], mensajeSaliente)
+          } else {
+            registrar(`No se encontró una ruta desde ${nodoLocal.name} hacia ${nodoDestino.name}.`, 'warn')
+          }
+        }
+
+      } else if (opcionUsuario === '2') {
+        registrar('Escuchando mensajes entrantes...', 'info')
+        await new Promise(resolve => escucharMensaje(conexionXmpp, nodoLocal.name, instanciasNodos, mapaNombresXmpp, usuarioXmpp, algoritmoElegido, nodoLocal))
+
+      } else if (opcionUsuario === '3') {
+        registrar('Saliendo...', 'info')
+        seguirEjecutando = false
+      } else {
+        registrar('Opción inválida. Por favor, inténtelo de nuevo.', 'warn')
+      }
+    }
+
+    // Cerrar la sesión XMPP después de que el bucle termine
+    await conexionXmpp.stop().then(() => {
+      registrar(`Cerrando sesión de ${usuarioXmpp}...`, 'info')
+      process.exit()
+    }).catch(err => {
+      registrar('Error al finalizar la sesión: ' + err, 'error')
+      process.exit(1)
+    })
+  }
 }
 
 iniciar()
