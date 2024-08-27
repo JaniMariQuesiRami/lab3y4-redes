@@ -4,7 +4,12 @@
 
 import { client as xmppCliente, xml as xmppXml } from '@xmpp/client'
 
-// Función personalizada para logging
+/**
+ * Function for logging messages with different severity levels.
+ * 
+ * @param {string} mensaje - The message to log.
+ * @param {string} [nivel='info'] - The severity level ('info', 'advertencia', 'error').
+ */
 const registrar = (mensaje, nivel = 'info') => {
   switch (nivel) {
     case 'info':
@@ -22,6 +27,13 @@ const registrar = (mensaje, nivel = 'info') => {
   }
 }
 
+/**
+ * Connects to an XMPP server with the provided user credentials.
+ * 
+ * @param {string} usuario - The username for XMPP authentication.
+ * @param {string} contrasena - The password for XMPP authentication.
+ * @returns {Promise<Object>} - The connected XMPP client instance.
+ */
 export async function ConectarXMPP(usuario, contrasena) {
   const xmpp = xmppCliente({
     service: 'ws://alumchat.lol:7070/ws/',
@@ -46,7 +58,17 @@ export async function ConectarXMPP(usuario, contrasena) {
   return xmpp
 }
 
-// Function to listen for incoming XMPP messages and process them according to the specified routing algorithm
+/**
+ * Listens for incoming XMPP messages and processes them based on the specified routing algorithm.
+ * 
+ * @param {Object} clienteXMPP - The XMPP client instance.
+ * @param {string} nombreLocal - The local node's name.
+ * @param {Object} instanciasNodos - Instances of the nodes in the network.
+ * @param {Object} mapaNombresXmpp - Mapping of node names to their XMPP addresses.
+ * @param {string} usuarioXmpp - The local user's XMPP address.
+ * @param {string} algoritmoElegido - The routing algorithm to use ('estado-de-enlace', 'inundacion').
+ * @param {Object} nodoLocal - The local node instance.
+ */
 export function escucharMensaje(clienteXMPP, nombreLocal, instanciasNodos, mapaNombresXmpp, usuarioXmpp, algoritmoElegido, nodoLocal) {
 
   // Event listener for incoming XMPP stanzas
@@ -144,6 +166,13 @@ export function escucharMensaje(clienteXMPP, nombreLocal, instanciasNodos, mapaN
 }
 // Función escucharMensaje codigo proporcionado y modificado por ChatGPT
 
+/**
+ * Sends an XMPP message to a specified recipient.
+ * 
+ * @param {Object} clienteXMPP - The XMPP client instance.
+ * @param {string} destinatario - The recipient's XMPP address.
+ * @param {Object} datosMensaje - The message data to be sent.
+ */
 export async function enviarMensaje(clienteXMPP, destinatario, datosMensaje) {
   const mensajeFormateado = {
     type: datosMensaje.type || "message",
