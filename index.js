@@ -2,6 +2,11 @@
 // Redes
 // Laboratorio #3
 
+import { ConectarXMPP, enviarMensaje, escucharMensaje } from './xmpp.js'
+import fs from 'fs'
+import path from 'path'
+import { NodoFlooding } from './classes/nodoFlooding.js'
+import { LinkStateNodo } from './classes/linkStateNodo.js'
 import readline from 'readline'
 
 const registrar = (mensaje, nivel = 'info') => {
@@ -152,7 +157,7 @@ const obtenerCredencialesNodo = (instanciasNodos, mapaNombresXmpp) => {
 }
 
 const iniciar = async () => {
-  const directorioConfig = 'src/config'
+  const directorioConfig = 'config'
   const archivoTopologia = encontrarArchivoTopologia(directorioConfig)
   const archivoNombres = encontrarArchivoNombres(directorioConfig)
 
@@ -170,10 +175,12 @@ const iniciar = async () => {
   let instanciasNodos
 
   if (algoritmoElegido === 'inundacion') {
-    instanciasNodos = cargarConfiguracionInundacion('src/config/flood-weights.json')
+    instanciasNodos = cargarConfiguracionInundacion('config/flood-weights.json')
   } else if (algoritmoElegido === 'estado-de-enlace') {
-    instanciasNodos = cargarConfiguracionEstadoEnlace('src/config/linkState-weights.json')
+    instanciasNodos = cargarConfiguracionEstadoEnlace('config/linkState-weights.json')
   }
+
+  const mapaNombresXmpp = cargarConfiguracionNombres(archivoNombres)
 
   if (instanciasNodos) {
     const { node: nodoLocal, usuarioXmpp, contrasena } = obtenerCredencialesNodo(instanciasNodos, mapaNombresXmpp)
