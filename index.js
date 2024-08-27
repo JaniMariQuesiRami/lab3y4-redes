@@ -9,6 +9,12 @@ import { NodoFlooding } from './classes/nodoFlooding.js'
 import { LinkStateNodo } from './classes/linkStateNodo.js'
 import readline from 'readline'
 
+/**
+ * Logs messages with different severity levels.
+ *
+ * @param {string} mensaje - The message to log.
+ * @param {string} [nivel='info'] - The log level ('info', 'warn', 'error').
+ */
 const registrar = (mensaje, nivel = 'info') => {
   switch (nivel) {
     case 'info':
@@ -26,7 +32,12 @@ const registrar = (mensaje, nivel = 'info') => {
   }
 }
 
-// Utilidades para analizar archivos
+/**
+ * Searches for a topology file in the specified directory.
+ *
+ * @param {string} directorio - The directory to search for topology files.
+ * @returns {string|null} - The path to the found topology file or null if not found.
+ */
 const encontrarArchivoTopologia = (directorio) => {
   const todosArchivos = fs.readdirSync(directorio)
   for (const archivo of todosArchivos) {
@@ -44,6 +55,12 @@ const interfazEntrada = readline.createInterface({
   terminal: false
 })
 
+/**
+ * Prompts the user for input.
+ *
+ * @param {string} textoPrompt - The text prompt to display.
+ * @returns {Promise<string>} - The user's input.
+ */
 const obtenerEntrada = (textoPrompt) => {
   return new Promise(resolve => {
     const rl = readline.createInterface({
@@ -57,10 +74,21 @@ const obtenerEntrada = (textoPrompt) => {
   })
 }
 
+/**
+ * Prompts the user for input using a shared readline interface.
+ *
+ * @param {string} textoPrompt - The text prompt to display.
+ * @returns {Promise<string>} - The user's input.
+ */
 const preguntarUsuario = (textoPrompt) => {
   return new Promise(resolve => interfazEntrada.question(textoPrompt, resolve))
 }
 
+/**
+ * Asks the user to choose a routing algorithm.
+ *
+ * @returns {Promise<string>} - The chosen routing algorithm ('inundacion' or 'estado-de-enlace').
+ */
 const elegirAlgoritmoEnrutamiento = async () => {
   const algoritmoElegido = await preguntarUsuario('Seleccione el método de enrutamiento:\n1. Inundación\n2. Estado de Enlace\n')
   if (algoritmoElegido === '1') {
@@ -73,6 +101,12 @@ const elegirAlgoritmoEnrutamiento = async () => {
   }
 }
 
+/**
+ * Searches for a name configuration file in the specified directory.
+ *
+ * @param {string} directorio - The directory to search for name configuration files.
+ * @returns {string|null} - The path to the found name configuration file or null if not found.
+ */
 const encontrarArchivoNombres = (directorio) => {
   const todosArchivos = fs.readdirSync(directorio)
   for (const archivo of todosArchivos) {
@@ -83,12 +117,24 @@ const encontrarArchivoNombres = (directorio) => {
   return null
 }
 
+/**
+ * Loads the name configuration from a file.
+ *
+ * @param {string} ubicacionArchivo - The path to the name configuration file.
+ * @returns {Object} - The parsed name configuration.
+ */
 const cargarConfiguracionNombres = (ubicacionArchivo) => {
   const datosCrudos = fs.readFileSync(ubicacionArchivo, 'utf8')
   const configuracionParseada = JSON.parse(datosCrudos).config
   return configuracionParseada
 }
 
+/**
+ * Loads the flooding configuration from a file.
+ *
+ * @param {string} ubicacionArchivo - The path to the flooding configuration file.
+ * @returns {Object} - The initialized instances of nodes.
+ */
 const cargarConfiguracionInundacion = (ubicacionArchivo) => {
   const datosCrudos = fs.readFileSync(ubicacionArchivo, 'utf8')
   const configuracionParseada = JSON.parse(datosCrudos).config
@@ -109,6 +155,12 @@ const cargarConfiguracionInundacion = (ubicacionArchivo) => {
   return instanciasNodos
 }
 
+/**
+ * Loads the link-state configuration from a file.
+ *
+ * @param {string} ubicacionArchivo - The path to the link-state configuration file.
+ * @returns {Object} - The initialized instances of nodes.
+ */
 const cargarConfiguracionEstadoEnlace = (ubicacionArchivo) => {
   const datosCrudos = fs.readFileSync(ubicacionArchivo, 'utf8')
   const configuracionParseada = JSON.parse(datosCrudos).config
@@ -129,7 +181,13 @@ const cargarConfiguracionEstadoEnlace = (ubicacionArchivo) => {
   return instanciasNodos
 }
 
-// Obtener credenciales del nodo desde los argumentos de la línea de comandos
+/**
+ * Retrieves node credentials from command-line arguments.
+ *
+ * @param {Object} instanciasNodos - The instances of nodes in the network.
+ * @param {Object} mapaNombresXmpp - The mapping of node names to XMPP addresses.
+ * @returns {Object} - The local node instance, XMPP user, and password.
+ */
 const obtenerCredencialesNodo = (instanciasNodos, mapaNombresXmpp) => {
   const [nombreNodo, contrasena] = process.argv.slice(2)
 
@@ -156,6 +214,9 @@ const obtenerCredencialesNodo = (instanciasNodos, mapaNombresXmpp) => {
   }
 }
 
+/**
+ * Initializes the network configuration and starts the main loop for sending and receiving messages.
+ */
 const iniciar = async () => {
   const directorioConfig = 'config'
   const archivoTopologia = encontrarArchivoTopologia(directorioConfig)
