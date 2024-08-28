@@ -236,9 +236,9 @@ const iniciar = async () => {
   let instanciasNodos
 
   if (algoritmoElegido === 'inundacion') {
-    instanciasNodos = cargarConfiguracionInundacion('config/flood-weights.json')
+    instanciasNodos = cargarConfiguracionInundacion('config/flood-config.json')
   } else if (algoritmoElegido === 'estado-de-enlace') {
-    instanciasNodos = cargarConfiguracionEstadoEnlace('config/linkState-weights.json')
+    instanciasNodos = cargarConfiguracionEstadoEnlace('config/link-config.json')
   }
 
   const mapaNombresXmpp = cargarConfiguracionNombres(archivoNombres)
