@@ -41,7 +41,7 @@ const registrar = (mensaje, nivel = 'info') => {
 const encontrarArchivoTopologia = (directorio) => {
   const todosArchivos = fs.readdirSync(directorio)
   for (const archivo of todosArchivos) {
-    if (archivo.startsWith('topo-') && archivo.endsWith('.txt')) {
+    if (archivo.startsWith('topologia') && archivo.endsWith('.txt')) {
       return path.join(directorio, archivo)
     }
   }
@@ -110,7 +110,7 @@ const elegirAlgoritmoEnrutamiento = async () => {
 const encontrarArchivoNombres = (directorio) => {
   const todosArchivos = fs.readdirSync(directorio)
   for (const archivo of todosArchivos) {
-    if (archivo.startsWith('names-') && archivo.endsWith('.json')) {
+    if (archivo.startsWith('topology') && archivo.endsWith('.json')) {
       return path.join(directorio, archivo)
     }
   }

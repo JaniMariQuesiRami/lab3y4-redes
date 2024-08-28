@@ -61,7 +61,7 @@ El código para la clase `LinkStateNodo` y sus funciones se encuentra en el arch
 
 3. **Configura los archivos de topología y nombres**:
 
-   - Asegúrate de que los archivos `names-*.txt` y `topo-*.txt` estén en la carpeta `config/`.
+   - Asegúrate de que los archivos `topology*.txt` y `topologia*.txt` estén en la carpeta `config/`.
    - Ejemplo de contenido de archivo de topología (`topo1-x-randomB-2024.txt`):
 
      ```json
