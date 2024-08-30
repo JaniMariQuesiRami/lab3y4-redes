@@ -107,6 +107,31 @@ El código para la clase `LinkStateNodo` y sus funciones se encuentra en el arch
 5. **Pruebas de conexión**:
    - Una vez que los nodos estén en ejecución, los mensajes se enviarán a través del servidor XMPP y cada nodo actuará de acuerdo con el algoritmo de enrutamiento configurado.
 
+### Instrucciones de Instalación usando Docker
+
+1. **Clona este repositorio**:
+
+   ```bash
+   git clone https://github.com/JaniMariQuesiRami/lab3y4-redes.git
+   cd lab3y4-redes
+   ```
+
+2. **Crear la imagen**:
+
+   ```bash
+   docker build -t my-node-app .
+   ```
+
+3. **Ejecuta los nodos**:
+   Para iniciar un nodo con el algoritmo deseado, ejecuta:
+
+   ```bash
+   docker run -it my-node-app "<nombre_nodo>" "<contrasena>"
+   ```
+
+   - `<nombre_nodo>`: El nombre del nodo a ejecutar (por ejemplo, `A`, `B`, `C`).
+   - `<contrasena>`: La contraseña del nodo para la autenticación en XMPP.
+
 ## Notas
 
 - Asegúrate de que el servidor XMPP esté funcionando y que los nodos puedan conectarse al servidor `alumchat.lol`.
